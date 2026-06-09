@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: void-clothing
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_PASS
+        sync: false

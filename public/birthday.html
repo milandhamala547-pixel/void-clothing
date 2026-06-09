@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Happy Birthday Asmita ✨</title>
+<style>
+/* Embedded fonts via base64-free approach - use system cursive as fallback */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  background:#07000d;
+  font-family:Georgia,serif;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;}
+#bgC{z-index:1;}
+#fwC{z-index:2;pointer-events:none;}
+#hC{z-index:3;pointer-events:none;}
+
+.phase{
+  position:fixed;inset:0;z-index:10;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.7s ease;
+}
+.phase.on{opacity:1;pointer-events:all;}
+
+/* ======= PHASE 1: ENVELOPE ======= */
+.p1-label{
+  font-family:Georgia,serif;font-style:italic;
+  font-size:clamp(0.9rem,4vw,1.2rem);
+  color:rgba(255,170,200,0.6);
+  letter-spacing:0.25em;
+  margin-bottom:2rem;
+  animation:glow 2.5s ease infinite;
+}
+@keyframes glow{0%,100%{opacity:0.5}50%{opacity:1}}
+
+.env-outer{
+  position:relative;
+  width:clamp(220px,60vw,300px);
+  height:clamp(150px,41vw,205px);
+  cursor:pointer;
+  filter:drop-shadow(0 0 28px rgba(255,80,140,0.5));
+  transition:transform 0.15s;
+}
+.env-outer:active{transform:scale(0.94);}
+
+/* SVG envelope drawn inline */
+.env-svg{width:100%;height:100%;}
+
+.env-lid{
+  transform-origin:50% 0%;
+  transition:transform 0.65s cubic-bezier(0.34,1.2,0.64,1);
+}
+.env-open .env-lid{transform:rotateX(-165deg);}
+
+.env-letter{
+  position:absolute;
+  left:12%;right:12%;bottom:18%;
+  background:linear-gradient(160deg,#fff5fa,#ffe0ef);
+  border-radius:6px 6px 3px 3px;
+  padding:0.5rem 0.6rem;
+  text-align:center;
+  font-family:Georgia,serif;
+  font-size:clamp(0.65rem,2.5vw,0.85rem);
+  color:#7a1040;
+  line-height:1.5;
+  transform:translateY(10%);
+  opacity:0;
+  transition:transform 0.65s cubic-bezier(0.34,1.2,0.64,1) 0.25s,
+             opacity 0.4s ease 0.25s;
+  box-shadow:0 -3px 16px rgba(255,80,140,0.25);
+  z-index:2;
+}
+.env-open .env-letter{transform:translateY(-80%);opacity:1;}
+
+.tap-hint{
+  font-family:Georgia,serif;font-style:italic;
+  font-size:clamp(0.72rem,3vw,0.9rem);
+  color:rgba(255,160,200,0.45);
+  letter-spacing:0.22em;
+  margin-top:1.8rem;
+  animation:glow 2s ease infinite 0.6s;
+}
+
+/* ======= PHASE 2: CAKE ======= */
+.cake-title{
+  font-family:Georgia,serif;
+  font-size:clamp(1.8rem,9vw,3.2rem);
+  font-weight:bold;
+  color:#ff85b3;
+  text-shadow:0 0 20px rgba(255,80,140,0.8),0 0 40px rgba(255,80,140,0.4);
+  text-align:center;
+  line-height:1.1;
+  margin-bottom:1.5rem;
+  animation:txtShimmer 3s ease infinite;
+}
+@keyframes txtShimmer{
+  0%,100%{color:#ff85b3;text-shadow:0 0 20px rgba(255,80,140,0.8);}
+  50%{color:#ffd700;text-shadow:0 0 20px rgba(255,215,0,0.8);}
+}
+
+.cake-scene{display:flex;flex-direction:column;align-items:center;}
+
+.cake-svg-wrap{
+  position:relative;
+  width:clamp(180px,48vw,240px);
+  cursor:pointer;
+  transition:transform 0.15s;
+  margin-bottom:1rem;
+}
+.cake-svg-wrap:active{transform:scale(0.95);}
+
+.cake-hint{
+  font-family:Georgia,serif;font-style:italic;
+  font-size:clamp(0.72rem,3vw,0.9rem);
+  color:rgba(255,160,200,0.5);
+  letter-spacing:0.2em;
+  animation:glow 2s ease infinite;
+}
+
+/* ======= PHASE 3: FINALE ======= */
+.finale-wrap{
+  position:relative;z-index:5;
+  text-align:center;
+  padding:0 1.5rem;
+  pointer-events:none;
+  width:100%;
+}
+.f-eyebrow{
+  font-family:Georgia,serif;font-style:italic;
+  font-size:clamp(0.72rem,3vw,0.95rem);
+  color:rgba(255,215,0,0.7);
+  letter-spacing:0.35em;
+  margin-bottom:0.8rem;
+  opacity:0;animation:slideUp 0.8s ease forwards 0.2s;
+}
+.f-hb{
+  font-family:Georgia,serif;
+  font-size:clamp(2.5rem,13vw,5.5rem);
+  font-weight:bold;
+  line-height:0.95;
+  color:#ffd700;
+  text-shadow:0 0 30px rgba(255,215,0,0.7),0 0 60px rgba(255,215,0,0.3);
+  opacity:0;animation:slideUp 0.8s ease forwards 0.5s;
+}
+.f-name{
+  font-family:Georgia,serif;
+  font-size:clamp(3rem,16vw,7rem);
+  font-weight:bold;
+  line-height:1;
+  color:#ff6eb4;
+  text-shadow:0 0 25px rgba(255,80,140,0.9),0 0 50px rgba(255,80,140,0.4);
+  opacity:0;animation:slideUp 0.9s ease forwards 0.8s;
+}
+.f-wish{
+  font-family:Georgia,serif;font-style:italic;
+  font-size:clamp(0.9rem,4vw,1.2rem);
+  color:rgba(255,210,230,0.88);
+  line-height:1.7;
+  letter-spacing:0.05em;
+  max-width:min(88vw,400px);
+  margin:0.9rem auto 0;
+  opacity:0;animation:slideUp 0.9s ease forwards 1.2s;
+}
+.f-emojis{
+  font-size:clamp(1.4rem,6vw,2rem);
+  letter-spacing:0.3em;
+  margin-top:1rem;
+  opacity:0;animation:slideUp 0.9s ease forwards 1.6s;
+}
+.f-replay{
+  position:fixed;
+  bottom:max(1.5rem,env(safe-area-inset-bottom,1.5rem));
+  left:50%;transform:translateX(-50%);
+  font-family:Georgia,serif;font-style:italic;
+  font-size:0.82rem;
+  color:rgba(255,160,200,0.5);
+  letter-spacing:0.2em;
+  border:1px solid rgba(255,100,160,0.25);
+  padding:0.45rem 1.2rem;
+  border-radius:20px;
+  background:rgba(255,50,100,0.06);
+  cursor:pointer;
+  opacity:0;animation:slideUp 0.9s ease forwards 2.2s;
+  pointer-events:all;
+  z-index:20;
+  white-space:nowrap;
+}
+
+/* floating emojis */
+.fe{
+  position:fixed;pointer-events:none;z-index:8;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0);opacity:0.9;}
+  100%{transform:translateY(-110vh);opacity:0;}
+}
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(30px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgC"></canvas>
+<canvas id="fwC"></canvas>
+<canvas id="hC"></canvas>
+
+<!-- PHASE 1 -->
+<div class="phase on" id="p1">
+  <div class="p1-label">✦ &nbsp; you have a message &nbsp; ✦</div>
+  <div class="env-outer" id="envBox" onclick="openEnv()">
+    <svg class="env-svg" viewBox="0 0 300 205" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bodyG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4a0a30"/>
+          <stop offset="100%" stop-color="#1a0412"/>
+        </linearGradient>
+        <linearGradient id="lidG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#c0325a"/>
+          <stop offset="100%" stop-color="#7a1030"/>
+        </linearGradient>
+        <linearGradient id="sealG" cx="50%" cy="50%" r="50%" id="sealG" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#ff6090"/>
+          <stop offset="100%" stop-color="#c0185a"/>
+        </linearGradient>
+        <filter id="gf"><feGaussianBlur stdDeviation="2"/></filter>
+      </defs>
+      <!-- glow -->
+      <ellipse cx="150" cy="130" rx="140" ry="90" fill="rgba(255,80,140,0.08)" filter="url(#gf)"/>
+      <!-- body -->
+      <rect x="5" y="80" width="290" height="120" rx="10" fill="url(#bodyG)" stroke="rgba(255,100,160,0.2)" stroke-width="1"/>
+      <!-- side triangles -->
+      <polygon points="5,80 155,155 5,200" fill="#2d0820" opacity="0.8"/>
+      <polygon points="295,80 145,155 295,200" fill="#2d0820" opacity="0.8"/>
+      <!-- bottom triangle -->
+      <polygon points="5,200 155,155 295,200" fill="#200610" opacity="0.7"/>
+      <!-- lid back -->
+      <polygon points="5,80 295,80 150,185" fill="#200610"/>
+      <!-- lid front -->
+      <g id="envLidG" style="transform-origin:150px 80px;transition:transform 0.65s cubic-bezier(0.34,1.2,0.64,1);">
+        <polygon points="5,80 295,80 150,185" fill="url(#lidG)" stroke="rgba(255,120,160,0.15)" stroke-width="1"/>
+        <polygon points="5,80 295,80 150,185" fill="rgba(255,255,255,0.07)"/>
+      </g>
+      <!-- seal -->
+      <g id="sealG2" style="transition:opacity 0.4s">
+        <circle cx="150" cy="148" r="22" fill="#c0185a"/>
+        <circle cx="150" cy="148" r="22" fill="rgba(255,80,140,0.5)"/>
+        <text x="150" y="155" text-anchor="middle" font-size="18">💌</text>
+        <!-- glow ring -->
+        <circle cx="150" cy="148" r="26" fill="none" stroke="rgba(255,100,160,0.4)" stroke-width="2"/>
+      </g>
+    </svg>
+    <div class="env-letter" id="envLetter">
+      Happy Birthday<br>
+      <strong style="font-size:1.15em">Asmita</strong> 🩷<br>
+      <em style="font-size:0.9em;color:#a03060">open me...</em>
+    </div>
+  </div>
+  <div class="tap-hint">tap to open</div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase" id="p2">
+  <div class="cake-scene">
+    <div class="cake-title">Happy Birthday<br>Asmita! 🎂</div>
+    <div class="cake-svg-wrap" onclick="blowCandles()" id="cakeWrap">
+      <svg id="cakeSvg" viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <defs>
+          <linearGradient id="t1g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d4527a"/><stop offset="100%" stop-color="#7a1030"/>
+          </linearGradient>
+          <linearGradient id="t2g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c0405e"/><stop offset="100%" stop-color="#6a1028"/>
+          </linearGradient>
+          <linearGradient id="t3g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b03050"/><stop offset="100%" stop-color="#5a0e22"/>
+          </linearGradient>
+          <linearGradient id="plG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8d5c4"/><stop offset="100%" stop-color="#c4a882"/>
+          </linearGradient>
+          <radialGradient id="flameG" cx="50%" cy="80%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="35%" stop-color="#ffd700"/>
+            <stop offset="70%" stop-color="#ff6600"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+        </defs>
+
+        <!-- PLATE -->
+        <ellipse cx="120" cy="200" rx="115" ry="10" fill="url(#plG)"/>
+
+        <!-- TIER 1 (bottom) -->
+        <rect x="20" y="145" width="200" height="55" rx="10" fill="url(#t1g)"/>
+        <rect x="20" y="145" width="200" height="22" rx="10" fill="rgba(255,255,255,0.1)"/>
+        <!-- drips -->
+        <ellipse cx="45" cy="145" rx="7" ry="9" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="80" cy="145" rx="6" ry="8" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="120" cy="145" rx="7" ry="10" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="165" cy="145" rx="6" ry="8" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="200" cy="145" rx="7" ry="9" fill="rgba(255,230,240,0.8)"/>
+        <!-- decos -->
+        <text x="50" y="178" font-size="16">🎀</text>
+        <text x="170" y="178" font-size="16">🎀</text>
+        <text x="108" y="178" font-size="16">💝</text>
+
+        <!-- TIER 2 -->
+        <rect x="42" y="95" width="156" height="52" rx="9" fill="url(#t2g)"/>
+        <rect x="42" y="95" width="156" height="20" rx="9" fill="rgba(255,255,255,0.1)"/>
+        <ellipse cx="65" cy="95" rx="6" ry="8" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="100" cy="95" rx="5" ry="7" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="145" cy="95" rx="6" ry="8" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="178" cy="95" rx="5" ry="7" fill="rgba(255,230,240,0.8)"/>
+        <text x="58" y="127" font-size="15">💖</text>
+        <text x="162" y="127" font-size="15">🌷</text>
+
+        <!-- TIER 3 (top) -->
+        <rect x="72" y="55" width="96" height="42" rx="8" fill="url(#t3g)"/>
+        <rect x="72" y="55" width="96" height="16" rx="8" fill="rgba(255,255,255,0.1)"/>
+        <ellipse cx="90" cy="55" rx="5" ry="7" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="120" cy="55" rx="5" ry="7" fill="rgba(255,230,240,0.8)"/>
+        <ellipse cx="150" cy="55" rx="5" ry="7" fill="rgba(255,230,240,0.8)"/>
+        <text x="107" y="86" font-size="14">🌸</text>
+
+        <!-- CANDLES (5) -->
+        <!-- candle 1 -->
+        <rect x="72" y="30" width="9" height="26" rx="2" fill="#ff9de2" id="cv0"/>
+        <ellipse id="fl0" cx="76" cy="28" rx="7" ry="11" fill="url(#flameG)"/>
+        <!-- candle 2 -->
+        <rect x="90" y="26" width="9" height="30" rx="2" fill="#ffd700" id="cv1"/>
+        <ellipse id="fl1" cx="94" cy="24" rx="7" ry="11" fill="url(#flameG)"/>
+        <!-- candle 3 -->
+        <rect x="115" y="24" width="9" height="32" rx="2" fill="#80d4ff" id="cv2"/>
+        <ellipse id="fl2" cx="119" cy="22" rx="7" ry="11" fill="url(#flameG)"/>
+        <!-- candle 4 -->
+        <rect x="139" y="26" width="9" height="30" rx="2" fill="#aaffaa" id="cv3"/>
+        <ellipse id="fl3" cx="143" cy="24" rx="7" ry="11" fill="url(#flameG)"/>
+        <!-- candle 5 -->
+        <rect x="157" y="30" width="9" height="26" rx="2" fill="#ff8080" id="cv4"/>
+        <ellipse id="fl4" cx="161" cy="28" rx="7" ry="11" fill="url(#flameG)"/>
+      </svg>
+    </div>
+    <div class="cake-hint">✦ tap to blow the candles ✦</div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase" id="p3">
+  <div class="finale-wrap">
+    <div class="f-eyebrow">✦ &nbsp; wishing you &nbsp; ✦</div>
+    <div class="f-hb">Happy<br>Birthday</div>
+    <div class="f-name">Asmita</div>
+    <div class="f-wish">
+      May your day shine as bright as you do —<br>
+      filled with love, laughter, and all the<br>
+      magic you deserve. 🌸💫
+    </div>
+    <div class="f-emojis">🎂 &nbsp; 🩷 &nbsp; ✨ &nbsp; 🎉 &nbsp; 💫</div>
+  </div>
+  <div class="f-replay" onclick="replay()">↺ &nbsp; replay</div>
+</div>
+
+<script>
+// ── DEVICE PIXEL RATIO ──
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+// ── BG CANVAS: stars + nebula ──
+(function(){
+  const c = document.getElementById('bgC');
+  const cx = c.getContext('2d');
+  function rsz(){
+    c.width = innerWidth * DPR; c.height = innerHeight * DPR;
+    c.style.width = innerWidth+'px'; c.style.height = innerHeight+'px';
+    cx.scale(DPR, DPR);
+  }
+  rsz(); window.addEventListener('resize', rsz);
+  const W=()=>innerWidth, H=()=>innerHeight;
+
+  const stars = Array.from({length:220}, ()=>({
+    x: Math.random(), y: Math.random(),
+    r: Math.random()*1.3+0.2,
+    sp: Math.random()*0.006+0.002,
+    ph: Math.random()*Math.PI*2,
+    h: 300+Math.random()*80
+  }));
+
+  const blobs = [
+    {x:0.15,y:0.25,r:0.4,c:'180,0,80'},
+    {x:0.85,y:0.2,r:0.35,c:'80,0,180'},
+    {x:0.5,y:0.7,r:0.45,c:'140,0,60'},
+    {x:0.9,y:0.8,r:0.3,c:'60,0,140'},
+  ];
+
+  (function loop(t){
+    requestAnimationFrame(loop);
+    cx.clearRect(0,0,W(),H());
+    // nebula
+    for(const b of blobs){
+      const g = cx.createRadialGradient(b.x*W(),b.y*H(),0,b.x*W(),b.y*H(),b.r*Math.min(W(),H()));
+      g.addColorStop(0,`rgba(${b.c},0.13)`); g.addColorStop(1,`rgba(${b.c},0)`);
+      cx.fillStyle=g; cx.fillRect(0,0,W(),H());
+    }
+    // stars
+    for(const s of stars){
+      const a = 0.1+0.9*Math.abs(Math.sin(t*0.001*s.sp*500+s.ph));
+      cx.beginPath(); cx.arc(s.x*W(), s.y*H(), s.r, 0, Math.PI*2);
+      cx.fillStyle = `hsla(${s.h},80%,90%,${a})`; cx.fill();
+    }
+  })(0);
+})();
+
+// ── FIREWORKS CANVAS ──
+const fwC = document.getElementById('fwC');
+const fwx = fwC.getContext('2d');
+let FW, FH;
+function fwRsz(){
+  FW=innerWidth; FH=innerHeight;
+  fwC.width=FW*DPR; fwC.height=FH*DPR;
+  fwC.style.width=FW+'px'; fwC.style.height=FH+'px';
+  fwx.scale(DPR,DPR);
+}
+fwRsz(); window.addEventListener('resize', fwRsz);
+
+class FWParticle {
+  constructor(x,y){
+    this.x=x; this.y=y;
+    const a=Math.random()*Math.PI*2, sp=Math.random()*7+2;
+    this.vx=Math.cos(a)*sp; this.vy=Math.sin(a)*sp;
+    this.alpha=1; this.decay=Math.random()*0.02+0.012;
+    this.sz=Math.random()*2.8+0.8;
+    this.hue=Math.random()*360;
+    this.grav=0.09+Math.random()*0.05;
+    this.type=Math.random()<0.4?'star':'dot';
+    this.rot=Math.random()*Math.PI*2;
+    this.rsp=(Math.random()-0.5)*0.18;
+  }
+  update(){ this.vy+=this.grav; this.x+=this.vx; this.y+=this.vy; this.vx*=0.98; this.alpha-=this.decay; this.rot+=this.rsp; }
+  draw(){
+    fwx.save(); fwx.globalAlpha=Math.max(0,this.alpha);
+    if(this.type==='star'){
+      fwx.translate(this.x,this.y); fwx.rotate(this.rot);
+      fwx.fillStyle=`hsl(${this.hue},100%,70%)`;
+      fwx.beginPath();
+      for(let i=0;i<5;i++){
+        const a=i*Math.PI*0.4-Math.PI/2;
+        i===0?fwx.moveTo(Math.cos(a)*this.sz,Math.sin(a)*this.sz):fwx.lineTo(Math.cos(a)*this.sz,Math.sin(a)*this.sz);
+        const a2=a+Math.PI*0.2; fwx.lineTo(Math.cos(a2)*this.sz*0.4,Math.sin(a2)*this.sz*0.4);
+      }
+      fwx.closePath(); fwx.fill();
+    } else {
+      fwx.beginPath(); fwx.arc(this.x,this.y,this.sz,0,Math.PI*2);
+      fwx.fillStyle=`hsl(${this.hue},100%,72%)`; fwx.fill();
+      fwx.beginPath(); fwx.arc(this.x,this.y,this.sz*2.8,0,Math.PI*2);
+      fwx.fillStyle=`hsla(${this.hue},100%,80%,0.12)`; fwx.fill();
+    }
+    fwx.restore();
+  }
+}
+
+class Firework {
+  constructor(tx,ty){
+    this.x=Math.random()*FW; this.y=FH+10;
+    this.tx=tx!=null?tx:Math.random()*FW;
+    this.ty=ty!=null?ty:Math.random()*FH*0.52+FH*0.04;
+    const dx=this.tx-this.x, dy=this.ty-this.y, d=Math.sqrt(dx*dx+dy*dy);
+    const sp=Math.random()*5+13;
+    this.vx=(dx/d)*sp; this.vy=(dy/d)*sp;
+    this.hue=Math.random()*360;
+    this.exploded=false; this.parts=[];
+    this.trail=[];
+  }
+  update(){
+    if(!this.exploded){
+      this.trail.push({x:this.x,y:this.y});
+      if(this.trail.length>7) this.trail.shift();
+      this.x+=this.vx; this.y+=this.vy;
+      if(Math.hypot(this.tx-this.x,this.ty-this.y)<10){
+        this.exploded=true;
+        const n=Math.floor(Math.random()*85+55);
+        for(let i=0;i<n;i++) this.parts.push(new FWParticle(this.x,this.y));
+      }
+    } else {
+      this.parts=this.parts.filter(p=>p.alpha>0.01);
+      this.parts.forEach(p=>p.update());
+    }
+  }
+  draw(){
+    if(!this.exploded){
+      for(let i=0;i<this.trail.length;i++){
+        const t=this.trail[i], a=(i/this.trail.length)*0.7;
+        fwx.beginPath(); fwx.arc(t.x,t.y,2,0,Math.PI*2);
+        fwx.fillStyle=`hsla(${this.hue},100%,85%,${a})`; fwx.fill();
+      }
+      fwx.beginPath(); fwx.arc(this.x,this.y,3,0,Math.PI*2);
+      fwx.fillStyle=`hsl(${this.hue},100%,90%)`; fwx.fill();
+    } else { this.parts.forEach(p=>p.draw()); }
+  }
+  done(){ return this.exploded && this.parts.length===0; }
+}
+
+let fireworks=[], fwRAF=null, lastFW=0;
+
+function startFireworks(){
+  if(fwRAF) return;
+  for(let i=0;i<3;i++) fireworks.push(new Firework());
+  (function loop(ts){
+    fwRAF=requestAnimationFrame(loop);
+    fwx.fillStyle='rgba(0,0,0,0.16)'; fwx.fillRect(0,0,FW,FH);
+    if(ts-lastFW > 650+Math.random()*400){
+      fireworks.push(new Firework());
+      if(Math.random()>0.55) fireworks.push(new Firework());
+      lastFW=ts;
+    }
+    for(let i=fireworks.length-1;i>=0;i--){
+      fireworks[i].update(); fireworks[i].draw();
+      if(fireworks[i].done()) fireworks.splice(i,1);
+    }
+  })(0);
+}
+
+function stopFireworks(){
+  if(fwRAF){ cancelAnimationFrame(fwRAF); fwRAF=null; }
+  fireworks=[]; fwx.clearRect(0,0,FW,FH);
+}
+
+// ── HEART PARTICLES CANVAS ──
+const hC = document.getElementById('hC');
+const hx = hC.getContext('2d');
+let HW,HH,HCX,HCY,HSC,hPts=[],hRAF=null;
+
+function hRsz(){
+  HW=innerWidth; HH=innerHeight;
+  HCX=HW/2; HCY=HH*0.44;
+  HSC=Math.min(HW,HH)*0.0034;
+  hC.width=HW*DPR; hC.height=HH*DPR;
+  hC.style.width=HW+'px'; hC.style.height=HH+'px';
+  hx.scale(DPR,DPR);
+}
+hRsz(); window.addEventListener('resize', hRsz);
+
+function hPt(t){
+  return{
+    x: HCX+16*Math.pow(Math.sin(t),3)*HSC,
+    y: HCY-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*HSC
+  };
+}
+
+function buildHeart(){
+  const N=Math.min(2000,Math.floor(HW*HH/280));
+  hPts=Array.from({length:N},(_,i)=>{
+    const p=hPt((i/N)*Math.PI*2);
+    const a=Math.random()*Math.PI*2, d=Math.random()*Math.min(HW,HH)*0.55;
+    return{
+      tx:p.x, ty:p.y,
+      x:HCX+Math.cos(a)*d, y:HCY+Math.sin(a)*d,
+      sz:Math.random()*2+0.4,
+      a:0, ta:Math.random()*0.5+0.35,
+      hue:308+Math.random()*52,
+      sp:0.018+Math.random()*0.026,
+      wb:Math.random()*0.5, wph:Math.random()*Math.PI*2,
+      delay:Math.random()*1100, born:0
+    };
+  });
+}
+buildHeart();
+
+function startHeart(){
+  if(hRAF) return;
+  const now=performance.now();
+  hPts.forEach(p=>p.born=now);
+  (function loop(ts){
+    hRAF=requestAnimationFrame(loop);
+    hx.fillStyle='rgba(0,0,0,0.15)'; hx.fillRect(0,0,HW,HH);
+    const g=hx.createRadialGradient(HCX,HCY,0,HCX,HCY,Math.min(HW,HH)*0.33);
+    g.addColorStop(0,'rgba(255,40,110,0.07)'); g.addColorStop(1,'rgba(0,0,0,0)');
+    hx.fillStyle=g; hx.fillRect(0,0,HW,HH);
+    for(const p of hPts){
+      const el=ts-p.born;
+      if(el<p.delay){ p.x+=(Math.random()-0.5)*0.3; p.y+=(Math.random()-0.5)*0.3; }
+      else{
+        p.x+=(p.tx-p.x)*p.sp+Math.sin(ts*0.002+p.wph)*p.wb;
+        p.y+=(p.ty-p.y)*p.sp+Math.cos(ts*0.002+p.wph)*p.wb;
+        p.a+=(p.ta-p.a)*0.04;
+      }
+      hx.beginPath(); hx.arc(p.x,p.y,p.sz,0,Math.PI*2);
+      hx.fillStyle=`hsla(${p.hue},90%,72%,${p.a})`; hx.fill();
+      if(Math.hypot(p.tx-p.x,p.ty-p.y)<5){
+        hx.beginPath(); hx.arc(p.x,p.y,p.sz*2.8,0,Math.PI*2);
+        hx.fillStyle=`hsla(${p.hue},100%,82%,${p.a*0.1})`; hx.fill();
+      }
+    }
+  })(performance.now());
+}
+
+function stopHeart(){
+  if(hRAF){ cancelAnimationFrame(hRAF); hRAF=null; }
+  hx.clearRect(0,0,HW,HH);
+}
+
+// ── FLOATING EMOJIS ──
+let feEls=[];
+function spawnFE(){
+  const list=['🩷','💖','✨','🌸','💫','🎉','💝','🌷','⭐','🎊','💗','🌟'];
+  for(let i=0;i<22;i++){
+    const el=document.createElement('div'); el.className='fe';
+    el.textContent=list[Math.floor(Math.random()*list.length)];
+    el.style.cssText=`left:${Math.random()*100}%;bottom:${-5+Math.random()*8}%;`+
+      `font-size:${0.7+Math.random()*1.4}rem;`+
+      `animation-duration:${5+Math.random()*7}s;`+
+      `animation-delay:${Math.random()*5}s;`;
+    document.body.appendChild(el); feEls.push(el);
+  }
+}
+function clearFE(){ feEls.forEach(e=>e.remove()); feEls=[]; }
+
+// ── FLAME FLICKER ──
+let flickRAF=null;
+function startFlicker(){
+  const flames=[0,1,2,3,4].map(i=>document.getElementById('fl'+i));
+  (function flick(t){
+    flickRAF=requestAnimationFrame(flick);
+    flames.forEach((f,i)=>{
+      if(!f||f.style.display==='none') return;
+      const sc=0.85+0.3*Math.abs(Math.sin(t*0.007+i*1.3));
+      const sk=(Math.random()-0.5)*6;
+      f.style.transform=`scale(${sc},${0.9+0.2*Math.abs(Math.cos(t*0.009+i))}) skewX(${sk}deg)`;
+    });
+  })(0);
+}
+function stopFlicker(){ if(flickRAF){cancelAnimationFrame(flickRAF);flickRAF=null;} }
+
+// ── PHASE LOGIC ──
+function show(id){ document.getElementById(id).classList.add('on'); }
+function hide(id){ document.getElementById(id).classList.remove('on'); }
+
+// Phase 1 → 2
+let envOpen=false;
+function openEnv(){
+  if(envOpen) return; envOpen=true;
+  // animate lid via CSS class on the svg g
+  document.getElementById('envLidG').style.transform='rotateX(-165deg)';
+  document.getElementById('sealG2').style.opacity='0';
+  document.getElementById('envLetter').style.transform='translateY(-80%)';
+  document.getElementById('envLetter').style.opacity='1';
+  document.getElementById('envLetter').style.transition='transform 0.65s cubic-bezier(0.34,1.2,0.64,1) 0.25s, opacity 0.4s ease 0.25s';
+  setTimeout(()=>{ hide('p1'); show('p2'); startFlicker(); }, 1400);
+}
+
+// Phase 2 → 3
+let blown=false;
+function blowCandles(){
+  if(blown) return; blown=true;
+  stopFlicker();
+  [0,1,2,3,4].forEach((i,idx)=>{
+    setTimeout(()=>{
+      const f=document.getElementById('fl'+i);
+      if(f){ f.style.transition='opacity 0.3s,transform 0.3s'; f.style.opacity='0'; f.style.transform='scaleY(0)'; }
+    }, idx*130);
+  });
+  // shake cake
+  const cw=document.getElementById('cakeWrap');
+  cw.style.transition='transform 0.1s'; cw.style.transform='scale(1.04)';
+  setTimeout(()=>cw.style.transform='scale(1)',200);
+  setTimeout(()=>{ hide('p2'); launchFinale(); }, 1500);
+}
+
+function launchFinale(){
+  show('p3');
+  startHeart();
+  startFireworks();
+  spawnFE();
+}
+
+function replay(){
+  stopHeart(); stopFireworks(); clearFE();
+  envOpen=false; blown=false;
+  // reset flame opacity
+  [0,1,2,3,4].forEach(i=>{
+    const f=document.getElementById('fl'+i);
+    if(f){ f.style.opacity='1'; f.style.transform=''; }
+  });
+  // reset env lid
+  document.getElementById('envLidG').style.transform='';
+  document.getElementById('sealG2').style.opacity='1';
+  document.getElementById('envLetter').style.transform='translateY(10%)';
+  document.getElementById('envLetter').style.opacity='0';
+  // reset finale animations by toggling off/on
+  const p3=document.getElementById('p3');
+  hide('p3'); hide('p2');
+  // re-trigger CSS animations
+  const items=p3.querySelectorAll('[class^=f-]');
+  items.forEach(el=>{ el.style.animation='none'; void el.offsetWidth; el.style.animation=''; });
+  setTimeout(()=>{ show('p1'); },100);
+}
+</script>
+</body>
+</html>
+HTMLEOF
+echo "done"
