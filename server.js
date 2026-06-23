@@ -96,10 +96,13 @@ if (hasDist) {
         res.sendFile(path.join(distPath, 'index.html'));
     });
 } else {
-    console.warn('dist/ not found — run "npm run build" before starting in production.');
-    // Serve public/ so asset paths like /images/* resolve without a build.
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(__dirname));
+    console.warn('dist/ not found — run "npm run build" (or "npm run dev" for development).');
+    app.get('*', (req, res, next) => {
+        if (req.method !== 'GET') return next();
+        res
+            .status(503)
+            .send('Frontend not built. Run "npm run build", or use "npm run dev" for the Vite dev server.');
+    });
 }
 
 app.listen(PORT, () => {

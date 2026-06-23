@@ -28,7 +28,7 @@ const prodPackage = {
     cors: '^2.8.5',
     dotenv: '^16.0.3',
     express: '^4.18.2',
-    nodemailer: '^6.9.1'
+    nodemailer: '^8.0.10'
   },
   engines: {
     node: '>=18'
