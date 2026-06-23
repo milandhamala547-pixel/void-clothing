@@ -97,7 +97,9 @@ if (hasDist) {
     });
 } else {
     console.warn('dist/ not found — run "npm run build" before starting in production.');
-    app.use(express.static('.'));
+    // Serve public/ so asset paths like /images/* resolve without a build.
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(__dirname));
 }
 
 app.listen(PORT, () => {
