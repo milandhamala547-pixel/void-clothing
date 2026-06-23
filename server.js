@@ -46,10 +46,14 @@ app.post('/subscribe', async (req, res) => {
         await transporter.sendMail({
             from: `VOID <${process.env.GMAIL_USER}>`,
             to: email,
-            subject: 'Welcome to VOID — Minimal Wear',
+            subject: 'Thank you for subscribing to VOID',
             text: `Welcome to VOID!\n\nThank you for subscribing to our newsletter. You will now receive updates on future drops and exclusive releases.\n\nNo noise. No distractions. Just clothing built to remain.\n\n— VOID`,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #111;">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
+                    <div style="background: #111; padding: 32px 24px; text-align: center; border-radius: 14px 14px 0 0;">
+                        <span style="display: inline-block; color: #fff; font-size: 2rem; font-weight: 700; letter-spacing: 14px; padding-left: 14px;">VOID</span>
+                    </div>
+                    <div style="padding: 24px;">
                     <h1 style="letter-spacing: 4px; color: #111;">Welcome to VOID</h1>
                     <p style="font-size: 1rem; line-height: 1.7; color: #444;">
                         Thanks for subscribing to our newsletter. You're now on the list for future drops, exclusive releases, and first access to new collections.
@@ -64,6 +68,7 @@ app.post('/subscribe', async (req, res) => {
                     <p style="margin-top: 30px; color: #999; font-size: 12px;">
                         © 2026 VOID — Minimal Wear
                     </p>
+                    </div>
                 </div>
             `
         });
